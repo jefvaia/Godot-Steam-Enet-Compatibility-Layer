@@ -1,2 +1,0 @@
-﻿57429
-E:/Godot/Versions/Godot 4.3 Dotnet (Steamworks, DX12 Full)/godot.windows.editor.x86_64.mono.exe
