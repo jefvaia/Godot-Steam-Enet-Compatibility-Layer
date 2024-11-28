@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccpj6w0g20d1"]
+
+[ext_resource type="Script" path="res://script/console.gd" id="1_fqyge"]
+
+[node name="Console" type="Window"]
+title = "Console"
+position = Vector2i(0, 36)
+size = Vector2i(480, 360)
+script = ExtResource("1_fqyge")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Input" type="LineEdit" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="Output" type="TextEdit" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 2
+editable = false
+drag_and_drop_selection_enabled = false
+wrap_mode = 1

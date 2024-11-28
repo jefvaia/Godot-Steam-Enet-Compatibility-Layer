@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbuf7mgjo86k"]
+
+[ext_resource type="PackedScene" uid="uid://ccpj6w0g20d1" path="res://scenes/console.tscn" id="2_ryycr"]
+
+[node name="Test" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Console" parent="." instance=ExtResource("2_ryycr")]
+position = Vector2i(120, 120)

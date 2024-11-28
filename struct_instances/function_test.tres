@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="NetworkObjectStatusReliableFunction" load_steps=2 format=3 uid="uid://c3x5oheoqvsmo"]
+
+[ext_resource type="Script" path="res://structs/network_message/network_message_reliable/network_object_status_reliable/network_object_status_reliable_function.gd" id="1_i3gxl"]
+
+[resource]
+script = ExtResource("1_i3gxl")
+function = "hide"
+parameters = []
+object_path = "/root/TestObject"
+object_type = "Node3D"
+time_sent = 0.0

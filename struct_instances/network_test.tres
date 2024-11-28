@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="NetworkPingRequest" load_steps=2 format=3 uid="uid://dxered0v0l71n"]
+
+[ext_resource type="Script" path="res://structs/network_message/network_message_reliable/network_ping/network_ping_request.gd" id="1_0gh7o"]
+
+[resource]
+script = ExtResource("1_0gh7o")
+message = "ping"
+time_sent = 0

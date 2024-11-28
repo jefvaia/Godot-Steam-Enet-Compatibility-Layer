@@ -1,0 +1,2 @@
+extends NetworkMessageReliable
+class_name AuthMessage

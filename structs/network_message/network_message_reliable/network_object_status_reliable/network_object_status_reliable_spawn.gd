@@ -1,0 +1,4 @@
+extends NetworkObjectStatusReliable
+class_name NetworkObjectStatusReliableSpawn
+
+@export var data: Dictionary

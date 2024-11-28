@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="NetworkObjectStatusReliableSpawn" load_steps=2 format=3 uid="uid://baerfrxunvsfq"]
+
+[ext_resource type="Script" path="res://structs/network_message/network_message_reliable/network_object_status_reliable/network_object_status_reliable_spawn.gd" id="1_ymrum"]
+
+[resource]
+script = ExtResource("1_ymrum")
+data = {
+"position": Vector3(1, 1, 1)
+}
+object_path = "/root/TestObject"
+object_type = "Node3D"
+time_sent = 0.0

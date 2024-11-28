@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="NetworkObjectStatusReliableEdit" load_steps=2 format=3 uid="uid://eyosb8v114g7"]
+
+[ext_resource type="Script" path="res://structs/network_message/network_message_reliable/network_object_status_reliable/network_object_status_reliable_edit.gd" id="1_ifhha"]
+
+[resource]
+script = ExtResource("1_ifhha")
+data = {
+"position": Vector3(2, 2, 2)
+}
+object_path = "/root/TestObject"
+object_type = "Node3D"
+time_sent = 0.0

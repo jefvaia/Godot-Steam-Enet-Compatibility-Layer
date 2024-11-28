@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="NetworkObjectStatusReliableDestroy" load_steps=2 format=3 uid="uid://djsb3tcreqo35"]
+
+[ext_resource type="Script" path="res://structs/network_message/network_message_reliable/network_object_status_reliable/network_object_status_reliable_destroy.gd" id="1_3q8tx"]
+
+[resource]
+script = ExtResource("1_3q8tx")
+object_path = "/root/TestObject"
+object_type = "Node3D"
+time_sent = 0.0

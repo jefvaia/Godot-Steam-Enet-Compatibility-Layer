@@ -1,0 +1,2 @@
+extends NetworkObjectStatusReliable
+class_name NetworkObjectStatusReliableDestroy
