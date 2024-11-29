@@ -40,6 +40,7 @@ func queue_message(message: NetworkMessage) -> void:
 		return
 	message.time_sent = Time.get_unix_time_from_system()
 	var arr_message = Util.resource_to_arr(message)
+	printt("queue-ing message: ", arr_message)
 	if message is NetworkMessageReliable:
 		reliable_buffer.append(arr_message)
 	if message is NetworkMessageUnreliable:
@@ -59,16 +60,5 @@ func _process_packet(packet: Array, from: int) -> void:
 		printt("Received packet: ", sub_packet)
 		
 		var resource = Util.arr_to_resource(sub_packet)
-		if resource is AuthMessageRequest:
-			var response = AuthMessageResponse.new()
-			response.success = true
-			queue_message(response)
-		elif resource is AuthMessageResponse:
-			_process_auth()
-		elif resource is NetworkPingRequest:
-			var response = NetworkPingResponse.new()
-			queue_message(response)
-		elif resource is NetworkPingResponse:
-			printt("Received ping response: ", resource.message, resource.time_sent)
-		elif resource is NetworkObjectStatusReliable:
-			Util.handle_network_object(resource)
+		
+		Util.handle_network_object(resource, from)

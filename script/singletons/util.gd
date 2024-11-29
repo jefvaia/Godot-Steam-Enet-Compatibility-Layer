@@ -5,7 +5,8 @@ func _ready() -> void:
 	_ready_networking()
 	_test()
 
-func _test():
+func _test() -> void:
+	
 	pass
 
 ###
@@ -86,14 +87,24 @@ func arr_to_resource(arr: Array[Dictionary]) -> Resource:
 	
 	return resource
 
-func handle_network_object(message: NetworkMessage) -> void:
-	if message is NetworkObjectStatusReliableSpawn:
-		if message.data.has("test"):
-			if message.data["test"] == true:
-				printt("Received test spawn")
-				return
+func handle_network_object(message: NetworkMessage, sender_id: int) -> void:
+	if message is AuthMessageRequest:
+		var response = AuthMessageResponse.new()
+		response.success = true
+		Static.networker.queue_message(response)
+	elif message is AuthMessageResponse:
+		if sender_id != Static.networker.host_id:
+			return
+		Static.networker._process_auth()
+	elif message is NetworkPingRequest:
+		var response = NetworkPingResponse.new()
+		Static.networker.queue_message(response)
+	elif message is NetworkPingResponse:
+		printt("Received ping response: ", message.message, message.time_sent)
 	
-	if message is NetworkObjectStatusReliableSpawn or message is NetworkObjectStatusUnreliableSpawn:
+	elif message is NetworkObjectStatusReliableSpawn or message is NetworkObjectStatusUnreliableSpawn:
+		if sender_id != Static.networker.host_id:
+			return
 		if get_node_or_null(message.object_path) == null:
 			var new_object: Object
 			if ClassDB.class_exists(message.object_type):
@@ -109,10 +120,13 @@ func handle_network_object(message: NetworkMessage) -> void:
 			
 			_apply_data_to_object(new_object, message.data)
 	
-	if message is NetworkObjectStatusReliableEdit or message is NetworkObjectStatusUnreliableEdit:
+	elif message is NetworkObjectStatusReliableEdit or message is NetworkObjectStatusUnreliableEdit:
 		var node = get_node_or_null(message.object_path)
 		
 		if node == null:
+			return
+		
+		if sender_id != Static.networker.host_id and sender_id != node.owner:
 			return
 		
 		if ClassDB.class_exists(message.object_type):
@@ -120,7 +134,7 @@ func handle_network_object(message: NetworkMessage) -> void:
 				printt("Wrong type")
 				return
 		else:
-			if not node.get_class() == load(message.object_type).get_class():
+			if not node.get_script().get_global_name() == load(message.object_type).get_global_name():
 				printt("Wrong type")
 				return
 		
@@ -128,18 +142,24 @@ func handle_network_object(message: NetworkMessage) -> void:
 		
 		_apply_data_to_object(node, message.data)
 	
-	if message is NetworkObjectStatusReliableDestroy or message is NetworkObjectStatusUnreliableDestroy:
+	elif message is NetworkObjectStatusReliableDestroy or message is NetworkObjectStatusUnreliableDestroy:
 		var node = get_node_or_null(message.object_path)
 		
 		if node == null:
 			return
 		
+		if sender_id != Static.networker.host_id and sender_id != node.owner:
+			return
+		
 		node.queue_free()
 	
-	if message is NetworkObjectStatusReliableFunction or message is NetworkObjectStatusUnreliableFunction:
+	elif message is NetworkObjectStatusReliableFunction or message is NetworkObjectStatusUnreliableFunction:
 		var node = get_node_or_null(message.object_path)
 		
 		if node == null:
+			return
+		
+		if sender_id != Static.networker.host_id and sender_id != node.owner:
 			return
 		
 		if len(message.parameters) == 0:
@@ -147,18 +167,30 @@ func handle_network_object(message: NetworkMessage) -> void:
 		else:
 			node.call(message.function, message.parameters)
 
-func object_params_to_dict(object: Node, params: Array[String]) -> Dictionary:
+func object_params_to_arr(object: Node, params: Array[String]) -> Dictionary:
 	var new_dict: Dictionary
 	
 	for param in params:
 		if !param.contains("/"):
-			new_dict[param] = object[param]
+			new_dict[param] = object.get(param)
 		else:
 			new_dict[param] = object.get_node(string_arr_to_string(param.split("/").slice(0, len(param.split("/")) - 1), "/")).get(param.split("/")[len(param.split("/")) - 1])
 	
 	return new_dict
 
-func _apply_data_to_object(object: Node, data: Dictionary):
+func apply_data_to_network_message(message: NetworkMessage, object: Node, params: Array[String]) -> NetworkMessage:
+	message.set("data", object_params_to_arr(object, params))
+	
+	message.set("object_path", object.get_path())
+	
+	if object.get_script() != null:
+		message.set("object_type", object.get_script().get_global_name())
+	else:
+		message.set("object_type", object.get_class())
+	
+	return message
+
+func _apply_data_to_object(object: Node, data: Dictionary) -> void:
 	for data_key: String in data:
 		if !data_key.contains("/"):
 			object.set(data_key, data[data_key])
